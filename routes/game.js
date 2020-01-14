@@ -39,6 +39,11 @@ function gameRoutes(app) {
       });
     }
   });
+
+  app.post("/answer/:index", (req, res) => {
+    const { index } = req.params;
+    console.log(index);
+  });
 }
 
 module.exports = gameRoutes;
