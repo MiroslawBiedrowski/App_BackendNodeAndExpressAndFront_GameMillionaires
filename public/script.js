@@ -1,6 +1,7 @@
 const question = document.getElementById("question");
 const gameBoard = document.querySelector("#game-board");
 const h2 = document.querySelector("h2");
+const goodAnswersSpan = document.querySelector("#good-answers");
 
 function fillQuestionElements(data) {
   if (data.winner === true) {
@@ -31,8 +32,6 @@ function showNextQuestion() {
 }
 
 showNextQuestion();
-
-const goodAnswersSpan = document.querySelector("#good-answers");
 
 function handleAnswerFeedback(data) {
   goodAnswersSpan.innerText = data.goodAnswers;
