@@ -1,5 +1,6 @@
 function gameRoutes(app) {
   let goodAnswers = 0;
+  let isGameOver = false;
   let callToAFriend = false;
   let questionToTheCrowdUsed = false;
   let fiftyFifty = false;
@@ -7,14 +8,14 @@ function gameRoutes(app) {
   const questions = [
     {
       question:
-        "Jaki jeżyk programowania jest używany do interaktywności na stronach www?",
+        "Jaki język programowania jest używany do interaktywności na stronach www?",
       answers: ["C++", "Fortran", "JavaScript", "Java"],
       correctAnswer: 2
     },
     {
       question: "Jaka rzeka zasila poznańskie jezioro Malta?",
       answers: ["Maltanka", "Główna", "Cybina", "Warta"],
-      correctAnswer: 3
+      correctAnswer: 2
     },
     {
       question: "Jakie miasto jest stolicą Monako?",
@@ -27,6 +28,10 @@ function gameRoutes(app) {
     if (goodAnswers === questions.length) {
       res.json({
         winner: true
+      });
+    } else if (isGameOver) {
+      res.json({
+        loser: true
       });
     } else {
       const nextQuestion = questions[goodAnswers];
@@ -41,8 +46,26 @@ function gameRoutes(app) {
   });
 
   app.post("/answer/:index", (req, res) => {
+    if (isGoodAnswer) {
+      res.json({
+        loser: true
+      });
+    }
     const { index } = req.params;
-    console.log(index);
+    console.log(index, Number(index));
+    const question = questions[goodAnswers];
+    const isGoodAnswer = question.correctAnswer === Number(index);
+
+    if (isGoodAnswer) {
+      goodAnswers++;
+    } else {
+      !isGameOver;
+    }
+
+    res.json({
+      correct: isGoodAnswer,
+      goodAnswers
+    });
   });
 }
 
