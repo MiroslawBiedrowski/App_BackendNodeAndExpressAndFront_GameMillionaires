@@ -46,20 +46,19 @@ function gameRoutes(app) {
   });
 
   app.post("/answer/:index", (req, res) => {
-    if (isGoodAnswer) {
+    if (isGameOver) {
       res.json({
         loser: true
       });
     }
     const { index } = req.params;
-    console.log(index, Number(index));
     const question = questions[goodAnswers];
     const isGoodAnswer = question.correctAnswer === Number(index);
 
     if (isGoodAnswer) {
       goodAnswers++;
     } else {
-      !isGameOver;
+      isGameOver = true;
     }
 
     res.json({

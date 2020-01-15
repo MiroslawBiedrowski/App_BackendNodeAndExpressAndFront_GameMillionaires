@@ -1,7 +1,20 @@
 const question = document.getElementById("question");
+const gameBoard = document.querySelector("#game-board");
+const h2 = document.querySelector("h2");
 
 function fillQuestionElements(data) {
-  console.log(data);
+  if (data.winner === true) {
+    gameBoard.style.display = "none";
+    h2.innerHTML = "Wygrałeś/eś!!!";
+    return;
+  }
+
+  if (data.loser === true) {
+    gameBoard.style.display = "none";
+    h2.innerHTML = "Przegrałeś!!! Spróbuj ponownie";
+    return;
+  }
+
   question.innerText = data.question;
   for (const i in data.answers) {
     const answerEl = document.querySelector(`#answer${Number(i) + 1}`);
@@ -19,12 +32,21 @@ function showNextQuestion() {
 
 showNextQuestion();
 
+const goodAnswersSpan = document.querySelector("#good-answers");
+
+function handleAnswerFeedback(data) {
+  goodAnswersSpan.innerText = data.goodAnswers;
+  showNextQuestion();
+}
+
 function sendAnswer(answerIndex) {
   fetch(`/answer/${answerIndex}`, {
     method: "POST"
   })
     .then(res => res.json())
-    .then(data => console.log(data));
+    .then(data => {
+      handleAnswerFeedback(data);
+    });
 }
 
 const buttons = document.querySelectorAll("button");
