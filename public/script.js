@@ -94,3 +94,26 @@ function fiftyFifty() {
 }
 
 document.querySelector("#fiftyFifty").addEventListener("click", fiftyFifty);
+
+function handleCrowdAnswer(data) {
+  if (typeof data.text === "string") {
+    tipDiv.innerText = data.text;
+  } else {
+    data.chart.forEach((percent, index) => {
+      buttons[index].innerText =
+        buttons[index].innerText + ": " + percent + "%";
+    });
+  }
+}
+
+function questionToTheCrowd() {
+  fetch("/help/crowd", {
+    method: "GET"
+  })
+    .then(res => res.json())
+    .then(data => handleCrowdAnswer(data));
+}
+
+document
+  .querySelector("#questionToTheCrowd")
+  .addEventListener("click", questionToTheCrowd);
