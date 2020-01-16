@@ -2,6 +2,7 @@ const question = document.getElementById("question");
 const gameBoard = document.querySelector("#game-board");
 const h2 = document.querySelector("h2");
 const goodAnswersSpan = document.querySelector("#good-answers");
+const tipDiv = document.querySelector("#tip");
 
 function fillQuestionElements(data) {
   if (data.winner === true) {
@@ -48,10 +49,48 @@ function sendAnswer(answerIndex) {
     });
 }
 
-const buttons = document.querySelectorAll("button");
+const buttons = document.querySelectorAll("button.answer-btn");
 for (const button of buttons) {
   button.addEventListener("click", e => {
     const answerIndex = e.target.dataset.answer;
     sendAnswer(answerIndex);
   });
 }
+
+function handleFrendsAnswer(data) {
+  tipDiv.innerText = data.text;
+}
+
+function callToAFriend() {
+  fetch("/help/friend", {
+    method: "GET"
+  })
+    .then(res => res.json())
+    .then(data => handleFrendsAnswer(data));
+}
+
+document
+  .querySelector("#callToAFriend")
+  .addEventListener("click", callToAFriend);
+
+function handlefiftyFiftyAnswer(data) {
+  if (typeof data.text === "string") {
+    tipDiv.innerText = data.text;
+  } else {
+    for (const button of buttons) {
+      if (data.answersToRemove.indexOf(button.innerText) > -1) {
+        button.innerText = "";
+      }
+    }
+  }
+}
+
+function fiftyFifty() {
+  fetch("/help/fifty", {
+    method: "GET"
+  })
+    .then(res => res.json())
+    .then(data => handlefiftyFiftyAnswer(data));
+}
+
+document.querySelector("#fiftyFifty").addEventListener("click", fiftyFifty);

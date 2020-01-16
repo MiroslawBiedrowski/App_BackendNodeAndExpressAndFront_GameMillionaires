@@ -1,9 +1,9 @@
 function gameRoutes(app) {
   let goodAnswers = 0;
   let isGameOver = false;
-  let callToAFriend = false;
+  let callToAFriendUsed = false;
   let questionToTheCrowdUsed = false;
-  let fiftyFifty = false;
+  let fiftyFiftyUsed = false;
 
   const questions = [
     {
@@ -64,6 +64,48 @@ function gameRoutes(app) {
     res.json({
       correct: isGoodAnswer,
       goodAnswers
+    });
+  });
+
+  app.get("/help/friend", (req, res) => {
+    if (callToAFriendUsed) {
+      return res.json({
+        text: "To koło ratunkowe zostało już wykorzystane."
+      });
+    }
+
+    callToAFriendUsed = true;
+
+    const doesFriendKnowAnswer = Math.random() < 0.5;
+    const question = questions[goodAnswers];
+
+    res.json({
+      text: doesFriendKnowAnswer
+        ? `Według mnie jest to odpowiedź ${
+            question.answers[question.correctAnswer]
+          }`
+        : `Niestety nie wiem`
+    });
+  });
+
+  //Obsługa ścieżki koło ratunkowe pół na pół
+  app.get("/help/fifty", (req, res) => {
+    if (fiftyFiftyUsed) {
+      return res.json({
+        text: "To koło ratunkowe zostało już wykorzystane."
+      });
+    }
+
+    fiftyFiftyUsed = true;
+
+    const question = questions[goodAnswers];
+    const answersCopy = question.answers.filter(
+      (s, index) => index !== question.correctAnswer
+    );
+    answersCopy.splice(~~(Math.random() * answersCopy.length1), 1);
+
+    res.json({
+      answersToRemove: answersCopy
     });
   });
 }
